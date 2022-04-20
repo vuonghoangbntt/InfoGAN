@@ -1,15 +1,19 @@
 import argparse
 from src.model import Generator, Discriminator
-from src.utils import init_logger, reset_logger, weights_init_normal, sample_latent
+from src.utils import init_logger, reset_logger, weights_init_normal, sample_latent, set_seed
 from src.trainer.InfoGAN_trainer import InfoGANTrainer
 from src.data import load_MNIST_dataset
 
 
 def main(args):
     init_logger()
+    set_seed(args.seed)
 
     generator = Generator(args)
     discriminator = Discriminator(args)
+    generator.apply(weights_init_normal)
+    discriminator.apply(weights_init_normal)
+
     train_loader, test_loader = load_MNIST_dataset(args)
 
     if args.do_train:
@@ -38,6 +42,7 @@ if __name__ == '__main__':
     parser.add_argument("--device", default="cpu", type=str, help="Training device (cuda or cpu)")
     parser.add_argument("--do_train", action="store_true", help="Whether or not do training")
     parser.add_argument("--do_infer", action="store_true", help="Whether or not do inference")
+    parser.add_argument("--seed", default=1, type=int, help="Model random seed")
 
     args = parser.parse_args()
     main(args)
