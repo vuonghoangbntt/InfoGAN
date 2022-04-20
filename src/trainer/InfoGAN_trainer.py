@@ -136,7 +136,7 @@ class InfoGANTrainer(Trainer):
         self.logger.info("EVALUATION NOT SUPPORTED YET")
 
     def save_model(self, generator, discriminator, loss_dict):
-        file_path = os.path.joint(self.save_path, 'model.pt')
+        file_path = os.path.join(self.save_path, 'model.pt')
         torch.save({
             'generator': generator.state_dict(),
             'discriminator': discriminator.state_dict(),
