@@ -35,3 +35,18 @@ def sample_latent(args):
     latent_cont = torch.rand((args.batch_size, args.continuous_var), device=args.device) * 2 - 1
 
     return torch.cat([z, latent_cat.view(args.batch_size, -1), latent_cont], dim=1), idx
+
+
+def sample_evaluate_noise(args, cat_idx=0, con_idx=0):
+    # sample latent code
+    fixed_z = torch.randn(args.latent_dim)
+    list_z = []
+    for i in range(args.category_number):
+        latent_cat = torch.zeros((args.discrete_var, args.category_number))
+        latent_cat[cat_idx, i] = 1
+        latent_cont = torch.zeros((args.continuous_var,))
+        c_range = torch.linspace(start=-2, end=2, steps=10)
+        for k in range(10):
+            latent_cont[con_idx] = c_range[k]
+            list_z.append(torch.cat([fixed_z, latent_cat.view(-1, 1).squeeze(), latent_cont]).unsqueeze(0))
+    return torch.cat(list_z, dim=0)
