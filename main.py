@@ -13,6 +13,8 @@ def main(args):
     discriminator = Discriminator(args)
     generator.apply(weights_init_normal)
     discriminator.apply(weights_init_normal)
+    generator.to(args.device)
+    discriminator.to(args.device)
 
     train_loader, test_loader = load_MNIST_dataset(args)
 
